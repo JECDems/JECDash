@@ -1,7 +1,7 @@
-library(dplyr)
-library(tidyr)
-library(jsonlite)
-library(fredr)
+library('dplyr')
+library('tidyr')
+library('jsonlite')
+library('fredr')
 
 
 fredr::fredr_set_key(FRED_API_KEY)
