@@ -18,9 +18,14 @@ jobs:
       with:
         r-version: '4.1.0' 
       
-    - name: Install dependencies
-      run: |
-        Rscript -e "install.packages(c('dplyr', 'tidyr', 'jsonlite', 'fredr'), dependencies = TRUE)"
+    - name: Install packages
+      uses: r-lib/actions/setup-r-dependencies@v2
+      with:
+        packages: |
+          any::dplyr
+          any::tidyr
+          any::jsonlite
+          any::fredr
         
     - name: Set API Credentials
       env:
