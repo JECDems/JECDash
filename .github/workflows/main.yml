@@ -2,7 +2,7 @@ name: Update JSON File
 
 on:
   schedule:
-    - cron: '30 17 * * 4' # This schedules the action to run at 17:30 UTC on Thursdays.
+    - cron: '15 18 * * 4' # This schedules the action to run at 17:30 UTC on Thursdays.
     
 jobs:
   update-json:
@@ -19,8 +19,8 @@ jobs:
       
     - name: Install dependencies
       run: |
-        Rscript -e "install.packages(c('dplyr', 'tidyr', 'jsonlite', 'devtools'), dependencies = TRUE)"
-        Rscript -e "devtools::install_github('JECDems/JECTools')"
+        Rscript -e "install.packages(c('dplyr', 'tidyr', 'jsonlite', 'remotes'), dependencies = TRUE)"
+        Rscript -e "remotes::install_github('JECDems/JECTools')"
         
     - name: Set API Credentials
       env:
