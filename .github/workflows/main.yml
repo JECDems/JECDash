@@ -2,8 +2,8 @@ name: Update JSON File
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # This schedules the action to run at 00:00 UTC every Sunday. Adjust as needed.
-
+    - cron: '30 17 * * 4' # This schedules the action to run at 17:30 UTC on Thursdays.
+    
 jobs:
   update-json:
     runs-on: ubuntu-latest
@@ -22,6 +22,14 @@ jobs:
         Rscript -e "install.packages(c('dplyr', 'tidyr', 'jsonlite', 'devtools'), dependencies = TRUE)"
         Rscript -e "devtools::install_github('JECDems/JECTools')"
         
+    - name: Set API Credentials
+      env:
+        FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+      run: |
+        echo "FRED_API_KEY=${FRED_API_KEY}" > .Renviron
+        echo "BLS_API_KEY=${BLS_API_KEY}" >> .Renviron
+        
     - name: Run convertToJson.R script
       run: Rscript R/convertToJson.R 
       
@@ -29,6 +37,6 @@ jobs:
       run: |
         git config --global user.name 'Alfredo Romero'
         git config --global user.email 'Alfredo_Romero@jec.senate.gov'
-        git add unemployment.JSON
+        git add unemploymentActions.JSON
         git commit -m 'Update unemployment JSON file' || echo "No changes to commit"
         git push
