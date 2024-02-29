@@ -20,8 +20,7 @@ jobs:
       
     - name: Install dependencies
       run: |
-        Rscript -e "install.packages(c('dplyr', 'tidyr', 'jsonlite', 'remotes'), dependencies = TRUE)"
-        Rscript -e "remotes::install_github('JECDems/JECTools')"
+        Rscript -e "install.packages(c('dplyr', 'tidyr', 'jsonlite', 'fredr'), dependencies = TRUE)"
         
     - name: Set API Credentials
       env:
