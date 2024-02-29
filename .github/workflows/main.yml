@@ -3,6 +3,7 @@ name: Update JSON File
 on:
   schedule:
     - cron: '15 18 * * 4' # This schedules the action to run at 17:30 UTC on Thursdays.
+  workflow_dispatch: # This line enables manual trigger for the workflow.
     
 jobs:
   update-json:
