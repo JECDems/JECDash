@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unemployment Rate Comparison</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        #chartContainer {
+            position: relative; 
+            width: 100%;
+            max-width: 900px;
+            height: 500px;
+        }
+        #stateSelector {
+            position: absolute;
+            top: 20%;
+            right: 0; 
+            transform: translateY(-50%); 
+            z-index: 10; 
+        }
+        .plot-container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="chartContainer">
+        <select id="stateSelector">
+            <option value="">Select a state</option>
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Arizona">Arizona</option>
+            <option value="Arkansas">Arkansas</option>
+            <option value="California">California</option>
+            <option value="Colorado">Colorado</option>
+            <option value="Connecticut">Connecticut</option>
+            <option value="Delaware">Delaware</option>
+            <option value="District of Columbia">District of Columbia</option>
+            <option value="Florida">Florida</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Hawaii">Hawaii</option>
+            <option value="Idaho">Idaho</option>
+            <option value="Illinois">Illinois</option>
+            <option value="Indiana">Indiana</option>
+            <option value="Iowa">Iowa</option>
+            <option value="Kansas">Kansas</option>
+            <option value="Kentucky">Kentucky</option>
+            <option value="Louisiana">Louisiana</option>
+            <option value="Maine">Maine</option>
+            <option value="Maryland">Maryland</option>
+            <option value="Massachusetts">Massachusetts</option>
+            <option value="Michigan">Michigan</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Mississippi">Mississippi</option>
+            <option value="Missouri">Missouri</option>
+            <option value="Montana">Montana</option>
+            <option value="Nebraska">Nebraska</option>
+            <option value="Nevada">Nevada</option>
+            <option value="New Hampshire">New Hampshire</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="New Mexico">New Mexico</option>
+            <option value="New York">New York</option>
+            <option value="North Carolina">North Carolina</option>
+            <option value="North Dakota">North Dakota</option>
+            <option value="Ohio">Ohio</option>
+            <option value="Oklahoma">Oklahoma</option>
+            <option value="Oregon">Oregon</option>
+            <option value="Pennsylvania">Pennsylvania</option>
+            <option value="Rhode Island">Rhode Island</option>
+            <option value="South Carolina">South Carolina</option>
+            <option value="South Dakota">South Dakota</option>
+            <option value="Tennessee">Tennessee</option>
+            <option value="Texas">Texas</option>
+            <option value="Utah">Utah</option>
+            <option value="Vermont">Vermont</option>
+            <option value="Virginia">Virginia</option>
+            <option value="Washington">Washington</option>
+            <option value="West Virginia">West Virginia</option>
+            <option value="Wisconsin">Wisconsin</option>
+            <option value="Wyoming">Wyoming</option>
+        </select>
+        <div id="unemploymentChart" class="plot-container"></div>
+    </div>
+
+<script>
+
+
+
+
+// Define the URL of the JSON file
+const jsonDataUrl = 'https://raw.githubusercontent.com/JECDems/JECDash/main/unemployment.JSON';
+
+// Fetch the JSON data
+fetch(jsonDataUrl)
+  .then(response => response.json()) // Parse the response as JSON
+  .then(data => {
+    // Data is now loaded and parsed, assign it to unemploymentData
+    const unemploymentData = data;
+
+    // Define the plotting function 
+    function plotUnemploymentRate(national, state = "") {
+        const yMin = 0;
+        const yMax = 8;
+      
+        let traces = [{
+            x: unemploymentData[national].dates,
+            y: unemploymentData[national].values,
+            name: "National",
+            type: 'scatter',
+            hoverinfo: 'y+name',
+            hovertemplate: '%{y:.1f}%'
+        }];
+
+        if (state && unemploymentData[state]) {
+            traces.push({
+                x: unemploymentData[state].dates,
+                y: unemploymentData[state].values,
+                name: state,
+                type: 'scatter',
+                hoverinfo: 'y+name',
+                hovertemplate: '%{y:.1f}%'
+            });
+        }
+        
+        let dynamicTitle = 'National Unemployment Rate';
+        if (state) {
+            dynamicTitle = 'National and ' + state + '\'s Unemployment Rate';
+        }
+
+        const layout = {
+            title: dynamicTitle,
+            
+            xaxis: {
+                title: '',
+                tickformat: "%B, %Y" // This formats the x-axis labels as "Month, Year"
+            },
+            yaxis: {
+                title: 'Unemployment Rate (%)',
+                tickvals: [0, 2, 4, 6, 8], // Define the values where you want the ticks
+                ticktext: ['0%', '2%', '4%', '6%', '8%']
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2,
+                showlegend: true
+            },
+            showlegend: true
+        };
+
+        Plotly.newPlot('unemploymentChart', traces, layout);
+    }
+
+    // Initial plot
+    plotUnemploymentRate("National");
+
+    // Setup the event listener for state selection
+    document.getElementById('stateSelector').addEventListener('change', function() {
+        const state = this.value;
+        plotUnemploymentRate("National", state);
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching or parsing the data:', error);
+  });
+</script>
+</body>
+</html>
