@@ -3,8 +3,7 @@ library('tidyr')
 library('jsonlite')
 library('fredr')
 
-
-fredr::fredr_set_key(FRED_API_KEY)
+fredr::fredr_set_key(Sys.getenv("FRED_API_KEY"))
 
 states <- data.frame(state = c(state.abb,"DC"))
 
