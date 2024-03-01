@@ -5,7 +5,7 @@ library('fredr')
 
 fredr::fredr_set_key(Sys.getenv("FRED_API_KEY"))
 
-states <- data.frame(state = c(state.abb,"DC"))
+states <- data.frame(state = c(state.abb,"DC","PR"))
 
 start_year <- 2020
 
@@ -38,7 +38,8 @@ states_unemployment <- purrr::pmap_dfr(
     dplyr::rename(USUR = UNRATE) |> 
     dplyr::as_tibble()
   
-  states_names <- c("date",state.name,"District of Columbia","National")
+  states_names <- c("date",state.name,"District of Columbia",
+                    "Puerto Rico", "National")
   names(states_unemployment) <- states_names
   
   json_list <- lapply(colnames(states_unemployment)[-1], function(state_name) {
