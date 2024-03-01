@@ -26,12 +26,17 @@ jobs:
           any::tidyr
           any::jsonlite
           any::fredr
+          
+    - name: Create and populate .Renviron file
+        run: |
+          echo FRED_API_KEY="$FRED_API_KEY" >> ~/.Renviron
+          shell: bash
         
-    - name: Set API Credentials
-      env:
-        FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-      run: |
-        "FRED_API_KEY=${FRED_API_KEY}" > .Renviron
+# - name: Set API Credentials
+#  env:
+#    FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+#      run: |
+#        "FRED_API_KEY=${FRED_API_KEY}" > .Renviron
         
     - name: Run convertToJson.R script
       run: Rscript R/convertToJson.R 
