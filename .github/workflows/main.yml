@@ -28,9 +28,9 @@ jobs:
           any::fredr
           
     - name: Create and populate .Renviron file
-        run: |
-          echo FRED_API_KEY="$FRED_API_KEY" >> ~/.Renviron
-          shell: bash
+      run: |
+        echo FRED_API_KEY="$FRED_API_KEY" >> ~/.Renviron
+      shell: bash
         
     - name: Run convertToJson.R script
       run: Rscript R/convertToJson.R 
