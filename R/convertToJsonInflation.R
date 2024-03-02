@@ -5,7 +5,7 @@ library('fredr')
 
 fredr::fredr_set_key(Sys.getenv("FRED_API_KEY"))
 
-start_year <- 2020
+start_year <- 2019
 
 end_year <- 2024
 
@@ -33,7 +33,8 @@ pricesY <- purrr::pmap_dfr(
   names(pricesY) <- inflation_names
   
   inflation <- pricesY %>%
-    mutate(across(-date, ~(. - lag(., 12)) / lag(., 12) * 100))
+    mutate(across(-date, ~(. - lag(., 12)) / lag(., 12) * 100)) |> 
+    slice(-(1:12))
   
   json_list <- lapply(colnames(inflation)[-1], function(inflation_name) {
     list(
