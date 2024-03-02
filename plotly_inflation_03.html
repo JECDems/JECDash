@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inflation Rate Comparison</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        #chartContainer {
+            position: relative; 
+            width: 100%;
+            max-width: 900px;
+            height: 500px;
+        }
+        #stateSelector {
+            position: absolute;
+            top: 20%;
+            right: 0; 
+            transform: translateY(-50%); 
+            z-index: 10; 
+        }
+        .plot-container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="chartContainer">
+        <select id="stateSelector">
+            <option value="">Select an inflation metric</option>
+            <option value="CPI">CPI Inflation Rate</option>
+            <option value="Core CPI">Core CPI Inflation Rate</option>
+            <option value="PCE">PCE Inflation Rate</option>
+            <option value="Core PCE">Core PCE Inflation Rate</option>
+            <option value="Producer Price Index">Producer Price Index</option>
+            
+        </select>
+        <div id="unemploymentChart" class="plot-container"></div>
+    </div>
+
+<script>
+
+
+
+
+// Define the URL of the JSON file
+const jsonDataUrl = 'https://raw.githubusercontent.com/JECDems/JECDash/main/InflationActions.JSON';
+
+// Fetch the JSON data
+fetch(jsonDataUrl)
+  .then(response => response.json()) // Parse the response as JSON
+  .then(data => {
+    // Data is now loaded and parsed, assign it to unemploymentData
+    const unemploymentData = data;
+
+    // Define the plotting function 
+    function plotUnemploymentRate(cpi, state = "") {
+        const yMin = 0;
+        const yMax = 8;
+      
+        let traces = [{
+            x: unemploymentData[cpi].dates,
+            y: unemploymentData[cpi].values,
+            name: "CPI",
+            type: 'scatter',
+            hoverinfo: 'y+name',
+            hovertemplate: '%{y:.1f}%'
+        }];
+
+        if (state && unemploymentData[state]) {
+            traces.push({
+                x: unemploymentData[state].dates,
+                y: unemploymentData[state].values,
+                name: state,
+                type: 'scatter',
+                hoverinfo: 'y+name',
+                hovertemplate: '%{y:.1f}%'
+            });
+        }
+        
+        let dynamicTitle = 'Consumer Price Index Inflation Rate';
+        if (state) {
+            dynamicTitle = 'Consumer Price Index and ' + state + '\'s Inflation Rate';
+        }
+
+        const layout = {
+            title: dynamicTitle,
+            
+            xaxis: {
+                title: '',
+                tickformat: "%B, %Y" // This formats the x-axis labels as "Month, Year"
+            },
+            yaxis: {
+                title: 'Inflation Rate (%)',
+                tickvals: [0, 2, 4, 6, 8], // Define the values where you want the ticks
+                ticktext: ['0%', '2%', '4%', '6%', '8%']
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2,
+                showlegend: true
+            },
+            showlegend: true
+        };
+
+        Plotly.newPlot('unemploymentChart', traces, layout);
+    }
+
+    // Initial plot
+    plotUnemploymentRate("CPI");
+
+    // Setup the event listener for state selection
+    document.getElementById('stateSelector').addEventListener('change', function() {
+        const state = this.value;
+        plotUnemploymentRate("CPI", state);
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching or parsing the data:', error);
+  });
+</script>
+</body>
+</html>
