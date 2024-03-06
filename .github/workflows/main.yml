@@ -41,6 +41,6 @@ jobs:
       run: |
         git config --global user.name 'Alfredo Romero'
         git config --global user.email 'Alfredo_Romero@jec.senate.gov'
-        git add unemploymentActions.JSON inflationActions.JSON
+        git add unemploymentActions.JSON InflationActions.JSON
         git commit -m 'Update unemployment and inflationJSON file' || echo "No changes to commit"
         git push
