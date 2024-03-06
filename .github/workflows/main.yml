@@ -2,9 +2,10 @@ name: Update JSON File
 
 on:
   schedule:
-    - cron: '15 18 * * 4' # This schedules the action to run at 17:30 UTC on Thursdays.
-  workflow_dispatch: # This line enables manual trigger for the workflow.
-    
+    - cron: '30 14 * * 1-5' # 9:30 AM EST on weekdays
+    - cron: '45 15 * * 1-5' # 10:45 AM EST on weekdays
+  workflow_dispatch:
+  
 jobs:
   update-json:
     runs-on: ubuntu-latest
@@ -33,10 +34,13 @@ jobs:
     - name: Run convertToJson.R script
       run: Rscript R/convertToJson.R 
       
+    - name: Run convertToJsonInflation.R script
+      run: Rscript R/convertToJsonInflation.R 
+      
     - name: Commit changes
       run: |
         git config --global user.name 'Alfredo Romero'
         git config --global user.email 'Alfredo_Romero@jec.senate.gov'
-        git add unemploymentActions.JSON
-        git commit -m 'Update unemployment JSON file' || echo "No changes to commit"
+        git add unemploymentActions.JSON inflationActions.JSON
+        git commit -m 'Update unemployment and inflationJSON file' || echo "No changes to commit"
         git push
