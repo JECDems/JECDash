@@ -2,8 +2,8 @@ name: Update JSON File
 
 on:
   schedule:
-    - cron: '30 14 * * 1-5' # 9:30 AM EST on weekdays
-    - cron: '45 15 * * 1-5' # 10:45 AM EST on weekdays
+    - cron: '00 15 * * 1-5' # 10:00 AM EST on weekdays
+    - cron: '00 02 * * 1-5' # 10:00 PM EST on weekdays
   workflow_dispatch:
   
 jobs:
